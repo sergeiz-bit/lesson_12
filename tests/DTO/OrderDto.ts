@@ -55,7 +55,7 @@ export class OrderDto {
       json.customerName,
       json.customerPhone,
       json.comment,
-      json.id
+      json.id,
     )
   }
 }

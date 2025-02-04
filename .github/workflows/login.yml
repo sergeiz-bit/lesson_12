@@ -44,5 +44,5 @@ jobs:
           USERNAME: ${{ secrets.username}}
           PASSWORD: ${{ secrets.password}}
         run: |
-          echo "Running Playwright to execute API tests..."
+          echo "Running Playwright to execute API tests...."
           npx playwright test tests/Login.spec.ts    

@@ -8,11 +8,11 @@ export class OrderDto {
 
   constructor(
     status: string | undefined,
-    courierId: number,
     customerName: string,
     customerPhone: string,
     comment: string,
-    id: number,
+    id?: number,
+    courierId?: number,
   ) {
     this.status = status
     this.courierId = courierId
@@ -25,23 +25,14 @@ export class OrderDto {
   static generateRandomOrderDto(): OrderDto {
     return new OrderDto(
       'OPEN',
-      +Math.floor(Math.random()),
       'David',
-      '4852345235',
+      `4852345235${Math.floor(Math.random() * 10)}`,
       'no comment',
-      +Math.floor(Math.random()),
     )
   }
 
   static generateOrderDtoWithoutStatus(): OrderDto {
-    return new OrderDto(
-      undefined,
-      +Math.floor(Math.random()),
-      'David',
-      '4852345235',
-      'no comment',
-      +Math.floor(Math.random()),
-    )
+    return new OrderDto(undefined, 'David', '4852345235', 'no comment')
   }
 
   static generateEmptyOrderDto(): any {
@@ -51,11 +42,11 @@ export class OrderDto {
   static serializeResponse(json: any): OrderDto {
     return new OrderDto(
       json.status,
-      json.courierId,
       json.customerName,
       json.customerPhone,
       json.comment,
       json.id,
+      json.courierId,
     )
   }
 }

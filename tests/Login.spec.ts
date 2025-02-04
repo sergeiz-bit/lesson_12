@@ -39,4 +39,33 @@ test.describe('Login tests', async () => {
     expect(requestedOrder.status).toBeDefined()
     expect(requestedOrder.status).toBe('OPEN')
   })
+
+  test('TL-12-4 Successful authorization, order creation and order status, order delete', async ({ request }) => {
+    const responseLogin = await request.post(`https://backend.tallinn-learning.ee/login/student`, {
+      data: LoginDTO.createLoginWithCorrectData(),
+    })
+    expect(responseLogin.status()).toBe(StatusCodes.OK)
+
+    const responseCreateOrder = await request.post(`https://backend.tallinn-learning.ee/orders`, {
+      data: OrderDto.generateRandomOrderDto(),
+      headers: {
+        Authorization: 'Bearer ' + (await responseLogin.text()),
+      },
+    })
+    expect(responseCreateOrder.status()).toBe(StatusCodes.OK)
+    const createdOrder = OrderDto.serializeResponse(await responseCreateOrder.json())
+
+    const responseOrderStatus = await request.delete(
+      `https://backend.tallinn-learning.ee/orders/${createdOrder.id}`,
+      {
+        headers: {
+          Authorization: 'Bearer ' + (await responseLogin.text()),
+        },
+      },
+    )
+    expect(responseOrderStatus.status()).toBe(StatusCodes.OK)
+    const requestedOrder = OrderDto.serializeResponse(await responseOrderStatus.json())
+     expect(requestedOrder.status).toBeUndefined()
+  })
+
 })

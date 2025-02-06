@@ -82,7 +82,7 @@ test.describe('Login tests', async () => {
         },
       },
     )
-    const responseText = await responseOrderStatus.text() // Parse JSON response
-    expect(responseText).toBe('') // Expect an empty object
+    const responseText = await responseOrderStatus.text()
+    expect(responseText).toBe('')
   })
 })

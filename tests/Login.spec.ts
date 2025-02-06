@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import { StatusCodes } from 'http-status-codes'
 import { OrderDto } from './DTO/OrderDto'
 import { ApiClient } from '../api/ApiClient'
+import { LoginDTO } from './DTO/LoginDTO'
 
 test.describe('Login tests', async () => {
   test('TL-12-1 Successful authorization', async ({ request }) => {
@@ -40,7 +41,7 @@ test.describe('Login tests', async () => {
     expect(requestedOrder.status).toBe('OPEN')
   })
 
-  test('TL-12-4 Successful authorization, order creation and order status, order delete', async ({ request }) => {
+  test('Delete order without API client', async ({ request }) => {
     const responseLogin = await request.post(`https://backend.tallinn-learning.ee/login/student`, {
       data: LoginDTO.createLoginWithCorrectData(),
     })
@@ -65,7 +66,23 @@ test.describe('Login tests', async () => {
     )
     expect(responseOrderStatus.status()).toBe(StatusCodes.OK)
     const requestedOrder = OrderDto.serializeResponse(await responseOrderStatus.json())
-     expect(requestedOrder.status).toBeUndefined()
+    expect(requestedOrder.status).toBeUndefined()
   })
 
+  test('Delete order with API client', async ({ request }) => {
+    const apiClient = await ApiClient.getInstance(request)
+    const orderId = await apiClient.createOrderAndReturnOrderId()
+    await apiClient.deleteOrderById(orderId)
+
+    const responseOrderStatus = await request.get(
+      `https://backend.tallinn-learning.ee/orders/${orderId}`,
+      {
+        headers: {
+          Authorization: 'Bearer ' + apiClient.jwt,
+        },
+      },
+    )
+    const responseText = await responseOrderStatus.text() // Parse JSON response
+    expect(responseText).toBe('') // Expect an empty object
+  })
 })

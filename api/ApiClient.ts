@@ -56,4 +56,17 @@ export class ApiClient{
     return responseBody.id
   }
 
+  async deleteOrderById(orderId: number): Promise<void>{
+    console.log ('Deleting an order...')
+    const response = await this.request.delete(
+      `https://backend.tallinn-learning.ee/orders/${orderId}`,
+      {
+        headers: {
+          Authorization: 'Bearer ' + (this.jwt),
+        },
+      },
+    )
+    expect(response.status()).toBe(StatusCodes.OK)
+  }
+
 }

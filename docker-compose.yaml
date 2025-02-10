@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: ../lesson12/Dockerfile
+      dockerfile: Dockerfile
     container_name: node_app
     ports:
       - "3000:3000"

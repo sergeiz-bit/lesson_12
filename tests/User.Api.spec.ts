@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { UserDto } from './DTO/UserDto'
 import { APIRequestContext } from 'playwright-core'
 
-test.describe('User managment app tests', async () => {
+test.describe('User management app tests', async () => {
   const clearUser = async (id: number, request: APIRequestContext): Promise<void> => {
     await request.delete(`http://localhost:3000/users/${id}`)
   }
